@@ -1,0 +1,19 @@
+-----------------------------------------------------------------
+client (copied from "nextjs-chatgpt-proxy")
+--------------------------
+
+Follow this link to bootstrap the next app:
+https://vercel.com/templates/next.js/nextjs-boilerplate
+https://nextjs.org/learn/basics/create-nextjs-app/setup
+
+$ pwd
+/Users/philip/workspaces/workspace-git/nextjs-trip_photo_map
+$ ls
+LICENSE		README.md	notes
+$ npx create-next-app
+✔ What is your project named? … trip_photo_map
+✔ Would you like to use TypeScript with this project? … No / Yes
+✔ Would you like to use ESLint with this project? … No / Yes
+
+...
+...

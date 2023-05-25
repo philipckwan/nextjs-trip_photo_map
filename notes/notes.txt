@@ -1,0 +1,2 @@
+todo:
+DONE(v0.2)-use env variables for google map api key, server url
