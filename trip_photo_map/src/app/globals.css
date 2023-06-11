@@ -25,3 +25,33 @@ body {
     )
     rgb(var(--background-start-rgb));
 }
+
+.drop-area {
+  text-align: center;
+  border: 2px dashed #ccc;
+  border-radius: 15px;
+  width: 95%;
+  margin: 20px auto;
+  padding: 12px;
+  background-color: rgba(255, 255, 255, 0.8);
+}
+
+.drop-area.highlight {
+  border-color: #4148a5;
+}
+
+#fileElem, #fileElem1, #fileElem2, #fileElem3 {
+  display: none;
+}
+
+.drop-area label {
+  cursor: pointer;
+}
+
+.drop-area img {
+  max-width: 100%;
+}
+
+.drop-area p {
+  color: #888888;
+}

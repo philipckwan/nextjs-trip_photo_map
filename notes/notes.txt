@@ -1,2 +1,28 @@
 todo:
 DONE(v0.2)-use env variables for google map api key, server url
+
+-bug: vertical view go out of screen when vertical view is very long
+DONE-setup routes from photo to photo according to timestamps
+DONE-refractor server side storage
+ DONE-support a view accessKey link
+ DONE-support a admin accessKey link
+ DONE-get rid of the accessToken once the above are done
+DONE-navigation
+ DONE-trip landing; input tripName, passphrase, username
+ DONE-trip admin; allow upload photos; also sees photos and map
+ DONE-trip viewer; only sees photos and map
+DONE-crud
+ DONE-crud interface to manage photos
+
+DONE-a main switch to turn off the whole app when published
+
+-click on thumbnail to view original
+DONE-sort the photos in the view mode slider
+-better buttons for left and right in view mode
+-when navigating the photos in the view mode slider, move the map focus corresponding to the photo
+
+-client side exifr extract to see if can solve the mobile upload exifr not exist issue
+
+-SEO, when pasting the view link to whatsapp, able to provide preview photos and map
+
+-hook to google drive share a photo folder

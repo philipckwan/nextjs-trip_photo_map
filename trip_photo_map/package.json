@@ -9,6 +9,7 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@ubilabs/google-maps-react-hooks": "^1.5.1",
     "autoprefixer": "10.4.14",
     "next": "13.4.3",
     "postcss": "8.4.23",

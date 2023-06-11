@@ -3,3 +3,15 @@ export function timeLog(msg) {
   let currentTime  = current.toLocaleTimeString();
   console.log(`[${currentTime}]${msg}`);
 };
+
+export function timestampToDateTime(timestamp) {
+  let d = new Date(timestamp);
+  let year = d.getFullYear();
+  let month = d.getMonth()+1;
+  let date = d.getDate();
+
+  let hour = d.getHours();
+  let minute = d.getMinutes();
+
+  return `${year}-${month.toString().padStart(2,"0")}-${date.toString().padStart(2,"0")}@${hour.toString().padStart(2,"0")}:${minute.toString().padStart(2,"0")}`;
+}
