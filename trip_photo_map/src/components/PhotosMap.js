@@ -1,4 +1,4 @@
-import { useState, useEffect, useContext } from "react";
+import { useState, useEffect, useContext , useRef} from "react";
 import {timeLog, timestampToDateTime} from "@/lib/PCKUtils";
 //import * as util from 'util'
 
@@ -7,23 +7,23 @@ import {
   useGoogleMap,
 } from "@ubilabs/google-maps-react-hooks";
 
-export function PhotosMap({photosAll}) {
+export function PhotosMap({photosAll, currentPos}) {
   //timeLog(`PhotosMap: 1.0; photosAll.length:[${photosAll.length}];`);
   const [mapContainer, setMapContainer] = useState(null);
-  //const {photos, photosB64} = useContext(TripInputsContext);
 
-  //timeLog(`PhotosMap: 1.1: process.env.NEXT_PUBLIC_GOOGLE_MAP_API_KEY:[${process.env.NEXT_PUBLIC_GOOGLE_MAP_API_KEY}];`);
+  useEffect(() => {
+    timeLog(`PhotosMap.useEffect[mapContainer]: 1.0;`);
+  }, [mapContainer])
 
-  //return(<div>hello</div>);
   return(
     <>
     <GoogleMapProvider
     googleMapsAPIKey={process.env.NEXT_PUBLIC_GOOGLE_MAP_API_KEY}
-    options={{zoom:10, center: {lat:0, lng:0}}}
+    options={{zoom:10, center: {lat:0, lng:0}, mapTypeControl: false, streetViewControl: false, fullscreenControl: false}}
     mapContainer={mapContainer}
     >
-      <div ref={(node) => {setMapContainer(node);}} style={{ height: "100vh" }} />
-      <PhotoMarkers photosAll={photosAll}/>
+      <div ref={(node) => {setMapContainer(node);}} style={{height: "70vh"}} />
+      <PhotoMarkers photosAll={photosAll} currentPos={currentPos}/>
     </GoogleMapProvider>
     </>
   );
@@ -32,34 +32,56 @@ export function PhotosMap({photosAll}) {
 
 //let openInfoWindow = undefined;
 
-function PhotoMarkers({photosAll}) {
+function PhotoMarkers({photosAll, currentPos}) {
   const {map} = useGoogleMap();
   const [openedInfoWindow, setOpenedInfoWindow] = useState(undefined);
+  const markersRef = useRef([]);
+  const arrowsRef = useRef([]);
+  //timeLog(`PhotoMarkers: 1.0;`);
+
+  function clearMarkersAndArrows() {
+    //timeLog(`PhotoMarkers.clearMarkersAndArrows: 1.0;`);
+    for (let aMarker of markersRef.current) {
+      aMarker.setMap(null);
+    }
+    for (let anArrow of arrowsRef.current) {
+      anArrow.setMap(null);
+    }
+    markersRef.current = [];
+    arrowsRef.current = [];
+  }
 
   useEffect(() => {
     if (!map) return;
-
-    //let photosCombined = [];
+    clearMarkersAndArrows();
+    if (photosAll == undefined || photosAll.length == 0) return;
+      
+    timeLog(`PhotosMap.useEffect[map, photosAll]; 1.0; photosAll.length:[${photosAll.length}];`);
 
     let initialBounds = new google.maps.LatLngBounds();
     let photosLatLng = [];
+    let latCenter;
+    let lngCenter;
     for (let i = 0; i < photosAll.length; i++) {
       let aPhoto = photosAll[i];
       let photoID = aPhoto.photoID;
-      //timeLog(`PhotosMap.useEffect: aPhoto[${i}]; photoID:[${aPhoto.photoID}]; datetime:[${aPhoto.datetime}]; timestamp:[${aPhoto.timestamp}];`)
       let lat = parseFloat(aPhoto.latitude);
-      timeLog(`PhotosMap.useEffect: aPhoto[${i}]; photoID:[${aPhoto.photoID}]; datetime:[${aPhoto.datetime}]; timestamp:[${aPhoto.timestamp}]; lat:[${lat}];`)
       if (isNaN(lat)) {
         continue;
       }
       let lng = parseFloat(aPhoto.longitude);
+      if (i == 0) {
+        latCenter = lat;
+        lngCenter = lng;
+      }
       photosLatLng.push({lat, lng});
     
       let uploadUser = aPhoto.uploadedBy;
       let photoB64 = aPhoto.thumbnailB64;
       let timestamp = aPhoto.timestamp;
-      //timeLog(`PhotoMarkers.useEffect: 1.2; i:${i}; lat:${lat}; lng:${lng}; photoID:${photoID}; photoB64:[${photoB64}];`);
+      //timeLog(`PhotoMarkers.useEffect[map, photosAll]: 1.2; [${i}]; photoID:[${photoID}]; lat:${lat}; lng:${lng};`);
       let aNewMarker = new google.maps.Marker({map});
+      markersRef.current.push(aNewMarker);
       aNewMarker.setPosition({lat, lng});
       let aNewInfoWindow = new google.maps.InfoWindow({
         content: `<div><p>ID:[${photoID}]<br/>Photo taken datetime:[${timestampToDateTime(timestamp)}]<br/>Uploaded By:[${uploadUser}];</p><img src="data:image/jpeg;base64,${photoB64}" width="300" height="300" /></div>`,
@@ -86,8 +108,11 @@ function PhotoMarkers({photosAll}) {
       }
       
     }
-    map.setCenter(initialBounds.getCenter());
-
+    //map.setCenter(initialBounds.getCenter());
+    if (!isNaN(latCenter)) {
+      map.setCenter({lat: latCenter, lng: lngCenter});
+    }
+    
     for (let i = 0; i < photosLatLng.length - 1; i++) {
       let aPhotoLatLngPair = [photosLatLng[i], photosLatLng[i+1]]
       const aPhotoPairPath = new google.maps.Polyline({
@@ -103,11 +128,22 @@ function PhotoMarkers({photosAll}) {
           },
         ],
       });
+      arrowsRef.current.push(aPhotoPairPath);
       aPhotoPairPath.setMap(map);
     }
-
-    //timeLog(`PhotoMarkers.useEffect: 1.5; END;`); 
   }, [map, photosAll]);
+
+  useEffect(() => {
+    //timeLog(`PhotosMap.useEffect[currentPos]: 1.0`);
+    if (!map) return;
+    if (photosAll[currentPos] == undefined) return;
+    let lat = parseFloat(photosAll[currentPos].latitude);
+    if (isNaN(lat)) {
+      return;
+    }
+    let lng = parseFloat(photosAll[currentPos].longitude);
+    map.panTo({lat, lng});
+  }, [currentPos]);
   
   //timeLog(`PhotoMarkers: 2.0; END;`);
   return null;

@@ -81,6 +81,17 @@ export class TripPhotoMapEngine {
     return thumbnailJson.data.thumbnailB64;
   }
 
+  static async getPhotoB64(accessToken, photoId) {
+    //timeLog(`TripPhotoMapEngine.getPhotoThumbnailB64: accessToken:${accessToken}; photoId:${photoId};`);
+    
+    const responsePhoto = await fetch(`/api/trip/access/${accessToken}/photos/${photoId}`, {
+      method: "get",
+      headers: {'Content-Type':'application/json'},
+    });
+    let photoJson = await responsePhoto.json();
+    return photoJson.data.photoB64;
+  }
+
   static async getPhotosMetadataAndThumbnailB64(accessToken, isSortAscending = false) {
     let photosMetadataAndThumbnailB64 = [];
     let photosMetadata = await TripPhotoMapEngine.getPhotosMetadata(accessToken, isSortAscending);

@@ -1,7 +1,5 @@
 todo:
 DONE(v0.2)-use env variables for google map api key, server url
-
--bug: vertical view go out of screen when vertical view is very long
 DONE-setup routes from photo to photo according to timestamps
 DONE-refractor server side storage
  DONE-support a view accessKey link
@@ -13,13 +11,27 @@ DONE-navigation
  DONE-trip viewer; only sees photos and map
 DONE-crud
  DONE-crud interface to manage photos
-
 DONE-a main switch to turn off the whole app when published
-
--click on thumbnail to view original
+DONE-click on thumbnail to view original; using modal
 DONE-sort the photos in the view mode slider
--better buttons for left and right in view mode
--when navigating the photos in the view mode slider, move the map focus corresponding to the photo
+DONE-better buttons for left and right in view mode
+DONE-when navigating the photos in the view mode slider, move the map focus corresponding to the photo
+
+DONE-upload photo - buttons need border
+DONE-photo list - table too wide
+DONE-login page - buttons resize for mobile
+DONE-bug - photo list - click view photo error
+
+-bug: vertical view go out of screen when vertical view is very long
+ -i.e. when open image in modal, in PhotosTable and trip-view/<token>
+
+DONE-photo view in modal, show info such as photoID, uploadedBy, etc...
+
+-improve the modal display photo
+DONE-toggle uploadUsers
+-select date range
+
+DONE-show the latLng in PhotosTable
 
 -client side exifr extract to see if can solve the mobile upload exifr not exist issue
 

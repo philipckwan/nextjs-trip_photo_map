@@ -24,7 +24,7 @@ export function TripLoaded() {
 
   useEffect(() => {
     async function stateChange() {
-      timeLog(`TripLoaded.useEffect.stateChange: stateTripLoaded:[${stateTripLoaded}];`);
+      timeLog(`TripLoaded.useEffect[stateTripLoaded, numStateUpdate].stateChange: stateTripLoaded:[${stateTripLoaded}];`);
       if (stateTripLoaded == STATE_LIST) {
         let photosMetadata = await TripPhotoMapEngine.getPhotosMetadata(viewTokenRef.current, true);
         //timeLog(`TripView.viewPhotoListing: photosMetadata.length:[${photosMetadata.length}];`);
@@ -77,12 +77,12 @@ export function TripLoaded() {
         </div>
       </div>
       <div className="flex flex-row justify-evenly">
-        <button onClick={() => handleStateTripLoadedChange(STATE_LIST)} className="mt-2 inline-block p-3 rounded-lg shadow-sm bg-indigo-500 text-white">Photos List</button>
-        <button onClick={() => handleStateTripLoadedChange(STATE_MAP)} className="mt-2 inline-block p-3 rounded-lg shadow-sm bg-indigo-500 text-white">Trip Map</button>
-        <button onClick={() => handleStateTripLoadedChange(STATE_UPLOAD)} className="mt-2 inline-block p-3 rounded-lg shadow-sm bg-indigo-500 text-white">Upload Photos</button>
+        <button onClick={() => handleStateTripLoadedChange(STATE_LIST)} className="m-2 inline-block p-2 rounded-lg shadow-sm bg-indigo-500 text-white">Photos List</button>
+        <button onClick={() => handleStateTripLoadedChange(STATE_MAP)} className="m-2 inline-block p-2 rounded-lg shadow-sm bg-indigo-500 text-white">Trip Map</button>
+        <button onClick={() => handleStateTripLoadedChange(STATE_UPLOAD)} className="m-2 inline-block p-2 rounded-lg shadow-sm bg-indigo-500 text-white">Upload Photos</button>
       </div>
       <div className="mt-2">
-        {stateTripLoaded == STATE_LIST ? <PhotosTable setTripViewStatusAndMessage={setStatusAndMessage} photosAll={photosAll} numStateUpdate={numStateUpdate} setNumStateUpdate={setNumStateUpdate}></PhotosTable> : stateTripLoaded == STATE_MAP ? <PhotosMap photosAll={photosAll}></PhotosMap> : <PhotosUpload></PhotosUpload>}
+        {stateTripLoaded == STATE_LIST ? <PhotosTable setTripViewStatusAndMessage={setStatusAndMessage} photosAll={photosAll} numStateUpdate={numStateUpdate} setNumStateUpdate={setNumStateUpdate}></PhotosTable> : stateTripLoaded == STATE_MAP ? <PhotosMap photosAll={photosAll} currentPos={0} ></PhotosMap> : <PhotosUpload></PhotosUpload>}
       </div>
     </div>
   );
