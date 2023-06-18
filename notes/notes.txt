@@ -31,6 +31,10 @@ DONE-photo view in modal, show info such as photoID, uploadedBy, etc...
 DONE-toggle uploadUsers
 -select date range
 
+DONE(v0.5)-fix dark mode display with mobile
+
+-pre-populate login screen with a link and params
+
 DONE-show the latLng in PhotosTable
 
 -client side exifr extract to see if can solve the mobile upload exifr not exist issue

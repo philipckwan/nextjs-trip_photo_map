@@ -54,7 +54,7 @@ export function PhotosTable({setTripViewStatusAndMessage, photosAll, numStateUpd
     <div>
       <table className="border-2 border-slate-300 my-2 w-full min-w-max table-auto text-left text-xs">
         <thead>
-          <tr className="bg-gray-100">
+          <tr className="bg-gray-100 dark:bg-gray-500">
             {TABLE_HEAD.map((head) => (
               <th key={head} className="text-sm p-2">
                 {head}
@@ -64,7 +64,7 @@ export function PhotosTable({setTripViewStatusAndMessage, photosAll, numStateUpd
         </thead>
         <tbody>
           {photosAll.map(({photoID, datetime, uploadedBy, latitude, longitude}, index) => {
-            const trClass = index % 2 == 1 ? "bg-gray-200" : "bg-gray-400";
+            const trClass = index % 2 == 1 ? "bg-gray-200 dark:bg-gray-600" : "bg-gray-400 dark:bg-gray-800";
             const tdClass = "p-2";
             const buttonClass = "m-1 p-1 rounded-md bg-indigo-500 text-white";
             return (

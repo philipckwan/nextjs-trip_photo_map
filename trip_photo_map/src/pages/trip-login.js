@@ -42,7 +42,7 @@ export default function TripLogin() {
     <main className="flex min-h-screen flex-col items-center justify-between px-6 pt-12">
       <div className="flex flex-col justify-center items-center h-[100vh]">
         <p>[TripLogin] Trip-Photo-Map App, by philipckwan [{Constants.APP_VERSION}]</p>  
-        <div className="!z-5 relative flex flex-col rounded-[20px] max-w-[600px] md:max-w-[800px] bg-white bg-clip-border shadow-3xl shadow-shadow-500 flex flex-col w-full !p-6 3xl:p-![18px] bg-white undefined">                
+        <div className="!z-5 relative flex flex-col rounded-[20px] max-w-[600px] md:max-w-[800px] bg-white dark:bg-gray-800 dark:text-gray-200 bg-clip-border shadow-3xl shadow-shadow-500 flex flex-col w-full !p-6 3xl:p-![18px]">                
           <div className="mb-3">              
               <TripInputsContext.Provider value={value}>
                 {tripStateRender()}                
