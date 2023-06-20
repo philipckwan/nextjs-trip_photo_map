@@ -1,6 +1,7 @@
 import {timeLog} from "@/lib/PCKUtils";
-import {useState, useRef, createContext} from "react";
+import {useState, useRef, createContext, useEffect} from "react";
 import {Constants} from "@/lib/Constants";
+import {useRouter} from "next/router";
 import {TripInputs} from "@/components/TripInputs";
 import {TripLoaded} from "@/components/TripLoaded";
 
@@ -9,6 +10,7 @@ import {TripLoaded} from "@/components/TripLoaded";
 export const TripInputsContext = createContext();
 
 export default function TripLogin() {
+  const router = useRouter();
   const [tripName, setTripName] = useState("");
   const [username, setUsername] = useState("");
 
@@ -21,6 +23,17 @@ export default function TripLogin() {
   const value = {tripName, setTripName, username, setUsername, setMainState, viewTokenRef, writeTokenRef, isNewTripRef};
 
   timeLog(`TripLogin: 1.0;`);// ENV_SOURCE:[${process.env.NEXT_PUBLIC_ENV_SOURCE}]; SERVER_URL:[${process.env.SERVER_URL}]; GOOGLE_MAP_API_KEY:[${process.env.GOOGLE_MAP_API_KEY}]`);
+
+  useEffect(() => {
+    let tripNameFromURL = router.query.tripName;
+    let usernameFromURL = router.query.username;
+    if (tripNameFromURL != undefined && tripNameFromURL.length > 0) {
+      setTripName(tripNameFromURL);
+    }
+    if (usernameFromURL != undefined && usernameFromURL.length > 0) {
+      setUsername(usernameFromURL);
+    }
+  }, [router]);
 
   function tripStateRender() {
     if (mainState == Constants.TRIP_STATE_INPUT) {
@@ -40,7 +53,7 @@ export default function TripLogin() {
   }
   return (
     <main className="flex min-h-screen flex-col items-center justify-between px-6 pt-12">
-      <div className="flex flex-col justify-center items-center h-[100vh]">
+      <div className="flex flex-col justify-center items-center">
         <p>[TripLogin] Trip-Photo-Map App, by philipckwan [{Constants.APP_VERSION}]</p>  
         <div className="!z-5 relative flex flex-col rounded-[20px] max-w-[600px] md:max-w-[800px] bg-white dark:bg-gray-800 dark:text-gray-200 bg-clip-border shadow-3xl shadow-shadow-500 flex flex-col w-full !p-6 3xl:p-![18px]">                
           <div className="mb-3">              

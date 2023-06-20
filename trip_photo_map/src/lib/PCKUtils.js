@@ -15,3 +15,8 @@ export function timestampToDateTime(timestamp) {
 
   return `${year}-${month.toString().padStart(2,"0")}-${date.toString().padStart(2,"0")}@${hour.toString().padStart(2,"0")}:${minute.toString().padStart(2,"0")}`;
 }
+
+export function dateTimeToTimestamp(dateTime) {
+  let date = new Date(dateTime)
+  return date.getTime()
+}

@@ -1,8 +1,9 @@
-import {timeLog} from "../lib/PCKUtils";
+import {timeLog, dateTimeToTimestamp, timestampToDateTime} from "@/lib/PCKUtils";
 import {useContext, useMemo, useState, useRef, useEffect} from "react";
 import {Constants} from "../lib/Constants";
 import {TripInputsContext} from "../pages/trip-login";
 import {TripPhotoMapEngine} from "@/lib/TripPhotoMapEngine";
+//import exifr from "exifr";
 import * as util from 'util'
 
 export function PhotosUpload() {
@@ -13,6 +14,10 @@ export function PhotosUpload() {
   const imgRef = useRef();
   const filesToUploadRef = useRef([]);
   const [numFiles, setNumFiles] = useState(0);
+  const [dateTime, setDateTime] = useState();
+  const [latitude, setLatitude] = useState();
+  const [longitude, setLongitude] = useState();
+  const [exifStr, setExifStr] = useState();
 
   useEffect(() => {
     // The DOM element is accessible here.
@@ -76,10 +81,42 @@ export function PhotosUpload() {
     };
   }
 
-  function handleUploadFile(event) {
+  async function handleUploadFile(event) {
     //timeLog(`handleUploadFile: 1.0;`);
     let aFile = event.target.files[0];
     timeLog(`__aFile: name:[${aFile.name}]; size:[${aFile.size}]`);
+
+    /*
+    let exifObj;
+    try {
+      exifObj = await exifr.parse(aFile); 
+    } catch (err) {
+      timeLog(`PhotosUpload.handleUploadFile: ERROR - exifr.parse failed; ${err};`);
+      return undefined;
+    }
+
+    let datetime = "n/a";
+    let timestamp = "n/a";
+    let latitude = "n/a";
+    let longitude = "n/a";
+    if (exifObj) {
+      if (exifObj.DateTimeOriginal != undefined) {
+        datetime = exifObj.DateTimeOriginal;
+        timestamp = dateTimeToTimestamp(datetime);
+      }
+      if (exifObj.latitude != undefined) {
+        latitude = exifObj.latitude;
+        longitude = exifObj.longitude;
+      }
+    }
+    timeLog(`PhotosUpload.handleUploadFile: datetime:[${datetime}]; latitude:[${latitude}]; longitude:[${longitude}];`);
+    timeLog(`__exifrObj:[${JSON.stringify(exifObj)}];`);
+    setDateTime(timestampToDateTime(datetime));
+    setLatitude(latitude);
+    setLongitude(longitude);
+    setExifStr(JSON.stringify(exifObj));
+    */
+
     handleFiles([aFile]);
   }
 
@@ -106,7 +143,7 @@ export function PhotosUpload() {
       <div ref={dropAreaRef} className="drop-area">
         <form className="my-form">
           <p>Select or drag and drop image files into this area</p>
-          <input type="file" id="fileElem" accept="image/*" onChange={handleUploadFile} ></input>
+          <input type="file" id="fileElem" onChange={handleUploadFile} ></input>
           <label className="m-2 inline-block p-3 rounded-lg shadow-sm bg-indigo-500 text-white" htmlFor="fileElem">Upload an image file</label>
         </form>
         <img ref={imgRef} id="imagePreview1"></img>
@@ -114,6 +151,14 @@ export function PhotosUpload() {
       <div>
         <button onClick={handleUploadFiles} className="m-2 inline-block p-3 rounded-lg shadow-sm bg-indigo-500 text-white">Upload files</button>
       </div>
+      {/*
+      <div>
+        <div>dateTime:{dateTime}</div>
+        <div>latitude:{latitude}</div>
+        <div>longitude:{longitude}</div>
+        <div>exifStr:{exifStr}</div>
+      </div>
+      */}
     </>
   );
 }

@@ -8,6 +8,7 @@ import Image from 'next/image'
 import {PhotosMap} from "@/components/PhotosMap"
 import { Modal } from "@/components/Modal";
 import { DummyImage } from "@/components/DummyImage";
+import {photoToString, getUsernamesFromPhotos, filterPhotosByUsernames, getDatesFromPhotos, filterPhotosByDates} from "@/lib/PhotosHandler";
 
 
 export default function TripViewDynamic() {
@@ -25,6 +26,7 @@ export default function TripViewDynamic() {
   const [modalPhoto, setModalPhoto] = useState("");
   const [accessToken, setAccessToken] = useState();
   const [users, setUsers] = useState([]);
+  const [dates, setDates] = useState([]);
 
   useEffect(() => {
     timeLog(`TripViewDynamic.useEffect[router]: 1.0`); 
@@ -35,6 +37,9 @@ export default function TripViewDynamic() {
         return;
       }
       let photosData = await TripPhotoMapEngine.getPhotosMetadataAndThumbnailB64(accessToken, true);  
+      let users = getUsernamesFromPhotos(photosData);
+      let dates = getDatesFromPhotos(photosData);
+      /*
       let usersSet = new Set();
       for (let i = 0; i < photosData.length; i++) {
         usersSet.add(photosData[i].uploadedBy);
@@ -43,7 +48,9 @@ export default function TripViewDynamic() {
       for (let aUser of usersSet) {
         newUsers.push({name:aUser,isShow:true});
       }
-      setUsers(newUsers);
+      */
+      setUsers(users.map(name => ({name, isShow:true})));
+      setDates(dates.map(date => ({date, isShow:true})));
       setPhotosDataFull(photosData);
       setPhotosData(photosData);
       setIsShowPhotoMap(true);
@@ -69,7 +76,8 @@ export default function TripViewDynamic() {
   }, [photosData, currentPos]);
 
   useEffect(() => {
-    timeLog(`TripViewDynamic.useEffect[users]: 1.0`);
+    timeLog(`TripViewDynamic.useEffect[users, dates]: 1.0`);
+    /*
     let showUsersSet = new Set();
     for (let aUser of users) {
       if (aUser.isShow) {
@@ -77,10 +85,16 @@ export default function TripViewDynamic() {
       }
     }
     let filteredPhotosData = photosDataFull.filter(aPhotoData => showUsersSet.has(aPhotoData.uploadedBy));
-    timeLog(`__filteredPhotosData.length:[${filteredPhotosData.length}];`)
+    */
+    let showUsersList = users.filter(({isShow}) => isShow).map(({name}) => name);
+    let showDatesList = dates.filter(({isShow}) => isShow).map(({date}) => date);
+
+    let filteredPhotosData = filterPhotosByDates(filterPhotosByUsernames(photosDataFull, showUsersList), showDatesList);
+
+    timeLog(`TripViewDynamic.useEffect[users, dates]: filteredPhotosData.length:[${filteredPhotosData.length}];`)
     setPhotosData(filteredPhotosData);
     setCurrentPos(0);
-  }, [users]);
+  }, [users, dates]);
   
   function moveSlider(direction) {
     switch(direction) {
@@ -122,6 +136,43 @@ export default function TripViewDynamic() {
     setUsers(newUsers);
   }
 
+  async function toggleShowUserAllNone() {
+    timeLog(`TripViewDynamic.toggleShowUserAllNone: 1.0;`);
+    let usersShow = users.filter(({isShow}) => isShow);
+    if (usersShow.length > 0) {
+      // set all to isShow:false
+      setUsers(users.map(({name}) => ({name, isShow:false})));
+    } else {
+      // set all to isShow:true
+      setUsers(users.map(({name}) => ({name, isShow:true})));
+    }
+  }
+
+  async function toggleShowDate(date) {
+    //timeLog(`TripViewDynamic.toggleShowDate: date.date:[${date.date}];`)
+    let newDates = [];
+    for (let i = 0; i < dates.length; i++) {
+      let aDate = dates[i];
+      if (aDate.date == date) {
+        aDate.isShow = !aDate.isShow;
+      } 
+      newDates.push(aDate);
+    }
+    setDates(newDates);
+  }
+
+  async function toggleShowDateAllNone() {
+    timeLog(`TripViewDynamic.toggleShowDateAllNone: 1.0;`);
+    let datesShow = dates.filter(({isShow}) => isShow);
+    if (datesShow.length > 0) {
+      // set all to isShow:false
+      setDates(dates.map(({date}) => ({date, isShow:false})));
+    } else {
+      // set all to isShow:true
+      setDates(dates.map(({date}) => ({date, isShow:true})));
+    }
+  }
+
   return (
     <div onClick={() => setShowModal(false)} className="flex flex-col justify-center">
       
@@ -157,6 +208,17 @@ export default function TripViewDynamic() {
                   <button key={name} onClick={() => {toggleShowUser(name)}} className={buttonClass}>{name}</button>
             )}
         )}
+        <button onClick={() => {toggleShowUserAllNone()}} className={users.filter(({isShow}) => isShow).length > 0 ? "m-1 p-1 rounded-md bg-indigo-500 text-white" : "m-1 p-1 rounded-md bg-gray-500 text-white"}>{ users.filter(({isShow}) => isShow).length > 0 ? "None" : "All"}</button>
+      </div>
+      <div className="flex flex-row justify-center m-1">
+        <div className="m-1 p-1">Date:</div>
+        {dates.map(({date, isShow}, index) => {
+            const buttonClass = isShow ? "m-1 p-1 rounded-md bg-indigo-500 text-white" : "m-1 p-1 rounded-md bg-gray-500 text-white";
+            return (
+                  <button key={date} onClick={() => {toggleShowDate(date)}} className={buttonClass}>{date}</button>
+            )}
+        )}
+        <button onClick={() => {toggleShowDateAllNone()}} className={dates.filter(({isShow}) => isShow).length > 0 ? "m-1 p-1 rounded-md bg-indigo-500 text-white" : "m-1 p-1 rounded-md bg-gray-500 text-white"}>{ dates.filter(({isShow}) => isShow).length > 0 ? "None" : "All"}</button>
       </div>
       <div className="justify-evenly w-4/5 mx-auto">
         {

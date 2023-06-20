@@ -1,4 +1,15 @@
 todo:
+
+-bug: vertical view go out of screen when vertical view is very long
+ -i.e. when open image in modal, in PhotosTable and trip-view/<token>
+-improve the modal display photo
+-allow the update/override of latLng
+-group close enough photos and latLng together to become a group marker
+-SEO, when pasting the view link to whatsapp, able to provide preview photos and map
+-integrate to google drive share a photo folder
+
+
+DONE:
 DONE(v0.2)-use env variables for google map api key, server url
 DONE-setup routes from photo to photo according to timestamps
 DONE-refractor server side storage
@@ -16,29 +27,15 @@ DONE-click on thumbnail to view original; using modal
 DONE-sort the photos in the view mode slider
 DONE-better buttons for left and right in view mode
 DONE-when navigating the photos in the view mode slider, move the map focus corresponding to the photo
-
 DONE-upload photo - buttons need border
 DONE-photo list - table too wide
 DONE-login page - buttons resize for mobile
 DONE-bug - photo list - click view photo error
-
--bug: vertical view go out of screen when vertical view is very long
- -i.e. when open image in modal, in PhotosTable and trip-view/<token>
-
-DONE-photo view in modal, show info such as photoID, uploadedBy, etc...
-
--improve the modal display photo
+DONE-pre-populate login screen with a link and params
+ http://localhost:3000/trip-login?tripName=Fukuoka202304&username=doris
+DONE-photo view in modal, show info such as photoID, uploadedBy, etc... 
 DONE-toggle uploadUsers
--select date range
-
+DONE-select date range
 DONE(v0.5)-fix dark mode display with mobile
-
--pre-populate login screen with a link and params
-
 DONE-show the latLng in PhotosTable
-
--client side exifr extract to see if can solve the mobile upload exifr not exist issue
-
--SEO, when pasting the view link to whatsapp, able to provide preview photos and map
-
--hook to google drive share a photo folder
+DONE(not working)-client side exifr extract to see if can solve the mobile upload exifr not exist issue

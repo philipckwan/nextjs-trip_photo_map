@@ -15,7 +15,7 @@ export function TripInputs() {
   const [message, setMessage] = useState("");
   //const {tripName} = useContext(TripInputsContext);
   
-  
+  /*
   function handleTripNameChange(event) {
     setTripName(event.target.value);
   }
@@ -27,6 +27,7 @@ export function TripInputs() {
   function handleUsernameChange(event) {
     setUsername(event.target.value);
   }
+  */
 
   function handleLoginTrip(isCreateTrip) {
     //timeLog(`TripInputs.handleLoginTrip: 1.0; isCreateTrip:[${isCreateTrip}];`);
@@ -68,15 +69,15 @@ export function TripInputs() {
       <div>
         <div className="flex flex-row h-12 w-full justify-evenly whitespace-nowrap items-baseline">
           <div className="w-40">Trip Name:</div>
-          <input onChange={handleTripNameChange} placeholder={PLACEHOLDER_TRIP_NAME} value={tripName} type="text" id="tripName" name="tripName" className="m-1 h-10 w-full rounded-lg border bg-white/0 p-3 text-sm outline-none border-gray-200"></input>
+          <input onChange={e => setTripName(e.target.value)} placeholder={PLACEHOLDER_TRIP_NAME} value={tripName} type="text" id="tripName" name="tripName" className="m-1 h-10 w-full rounded-lg border bg-white/0 p-3 text-sm outline-none border-gray-200"></input>
         </div>
         <div className="flex flex-row h-12 w-full justify-evenly whitespace-nowrap items-baseline">
           <div className="w-40">Passphrase:</div>
-          <input onChange={handleTripPassphraseChange} placeholder={PLACEHOLDER_TRIP_PASSPHRASE} value={tripPassphrase} type="text" id="tripPassphrase" name="tripPassphrase" className="m-1 h-10 w-full rounded-lg border bg-white/0 p-3 text-sm outline-none border-gray-200"></input>
+          <input onChange={e => setTripPassphrase(e.target.value)} placeholder={PLACEHOLDER_TRIP_PASSPHRASE} value={tripPassphrase} type="text" id="tripPassphrase" name="tripPassphrase" className="m-1 h-10 w-full rounded-lg border bg-white/0 p-3 text-sm outline-none border-gray-200"></input>
         </div>
         <div className="flex flex-row h-12 w-full justify-evenly whitespace-nowrap items-baseline">
           <div className="w-40">Username:</div>
-          <input onChange={handleUsernameChange} placeholder={PLACEHOLDER_USERNAME} value={username} type="text" id="username" name="username" className="m-1 h-10 w-full rounded-lg border bg-white/0 p-3 text-sm outline-none border-gray-200"></input>
+          <input onChange={e => setUsername(e.target.value)} placeholder={PLACEHOLDER_USERNAME} value={username} type="text" id="username" name="username" className="m-1 h-10 w-full rounded-lg border bg-white/0 p-3 text-sm outline-none border-gray-200"></input>
         </div>
       </div>
       <div className="flex flex-row justify-evenly">
