@@ -3,29 +3,28 @@ import {Constants} from "./Constants";
 
 export class TripPhotoMapEngine {
 
-  static async uploadPhotos(tripName, accessToken, username, photos) {
-    timeLog(`TripPhotoMapEngine.uploadPhotos: tripName:${tripName}; accessToken:${accessToken}; username:${username}; numPhotos:[${photos.length}];`);
-    let successCount = 0;
-    let failedCount = 0;
-    let status = Constants.RESULTS_ERROR;
-    let photoIDs = [];
+  static uploadPhotosAsync(tripName, accessToken, username, photos, cbUploadResult) {
+    timeLog(`TripPhotoMapEngine.uploadPhotosAsync: 1.0;`);
+    let uploadPromises = [];
     for (let aPhoto of photos) {
-      const response = await fetch(`/api/trip/access/${accessToken}/upload/${username}`, {
+      let anUploadPromise = fetch(`/api/trip/access/${accessToken}/upload/${username}`, {
         method: 'post',
         body: aPhoto,
       }); 
-      let respJson = await response.json();
-      if (respJson.status === Constants.RESULTS_OK) {
-        successCount++;
-        photoIDs.push(respJson.data.photoID);
-        status = Constants.RESULTS_OK;
-      } else {
-        timeLog(`TripPhotoMapEngine.uploadPhotos: upload photo failed: message:[${respJson.message}];`)
-        failedCount++;
-      }
+      uploadPromises.push(anUploadPromise);
     }
-    let message = `Total [${photos.length}] photos for upload; [${successCount}] success; [${failedCount}] failed;`;
-    return {status, message, photoIDs};
+    for (const anUploadPromise of uploadPromises) {
+      anUploadPromise.then((response) => {
+        response.json().then((respJson) => {
+          if (respJson.status == Constants.RESULTS_OK) {
+            cbUploadResult(Constants.PHOTO_UPLOAD_RESULT.SUCCESS);
+          } else {
+            cbUploadResult(Constants.PHOTO_UPLOAD_RESULT.FAIL);
+          }
+        });
+      });
+    }
+    return uploadPromises;
   }
 
   static async loginTrip(tripName, passphrase, username, isCreateTrip = false) {

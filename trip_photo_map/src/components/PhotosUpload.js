@@ -3,6 +3,8 @@ import {useContext, useMemo, useState, useRef, useEffect} from "react";
 import {Constants} from "../lib/Constants";
 import {TripInputsContext} from "../pages/trip-login";
 import {TripPhotoMapEngine} from "@/lib/TripPhotoMapEngine";
+import {StatusGreenAvailable} from "@/components/StatusGreenAvailable";
+import {StatusRedBusy} from "@/components/StatusRedBusy";
 //import exifr from "exifr";
 import * as util from 'util'
 
@@ -12,8 +14,10 @@ export function PhotosUpload() {
   const [statusAndMessage, setStatusAndMessage] = useState(Constants.STATUS_AND_MESSAGE_INITIAL);
   const dropAreaRef = useRef();
   const imgRef = useRef();
-  const filesToUploadRef = useRef([]);
-  const [numFiles, setNumFiles] = useState(0);
+  const [filesToUpload, setFilesToUpload] = useState([]);
+  const [uploadState, setUploadState] = useState(Constants.PHOTO_UPLOAD_STATE.FREE);
+  const [numUploadSuccess, setNumUploadSuccess] = useState(0);
+  const [numUploadFail, setNumUploadFail] = useState(0);
   const [dateTime, setDateTime] = useState();
   const [latitude, setLatitude] = useState();
   const [longitude, setLongitude] = useState();
@@ -34,7 +38,7 @@ export function PhotosUpload() {
     ["dragleave", "drop"].forEach(eventName => {
       dropAreaRef.current.addEventListener(eventName, () => {dropAreaRef.current.classList.remove("highlight")});
     });
-    dropAreaRef.current.addEventListener("drop", handleDrop);
+    dropAreaRef.current.addEventListener("drop", handleDropFiles);
     //console.log(ref.current);
   }, []);
 
@@ -55,37 +59,22 @@ export function PhotosUpload() {
     e.stopPropagation();
   }
 
-  function handleDrop(e) {
-    timeLog(`handleDrop: 1.0`);
+  function handleDropFiles(e) {
     var dt = e.dataTransfer;
     var files = dt.files;
-
-    handleFiles(files);
+    addFilesToUploadList(files);
   }
 
-  function handleFiles(files) {
-    timeLog(`handleFiles: 1.0;`);
-    //files = [...files];
-    for (let aFile of files) {
-      filesToUploadRef.current.push(aFile);
+  async function handleAddFileToUpload(event) {
+    //timeLog(`handleAddFileToUpload: 1.0;`);
+    if (uploadState == Constants.PHOTO_UPLOAD_STATE.BUSY) {
+      timeLog(`handleAddFileToUpload: WARN - should not reach here, as checking should be done at earlier stage; System is busy uploading, please wait for it to complete;`);
+      return;
     }
-    setNumFiles(filesToUploadRef.current.length);
-  }
-
-  function previewFile(file) {
-    timeLog(`previewFile: 1.0; file:[${file}];`);
-    let reader = new FileReader();
-    reader.readAsDataURL(file);
-    reader.onloadend = function() {
-        imgRef.current.src = reader.result;
-    };
-  }
-
-  async function handleUploadFile(event) {
-    //timeLog(`handleUploadFile: 1.0;`);
     let aFile = event.target.files[0];
-    timeLog(`__aFile: name:[${aFile.name}]; size:[${aFile.size}]`);
+    //timeLog(`handleAddFileToUpload: aFile: name:[${aFile.name}]; size:[${aFile.size}]`);
 
+    addFilesToUploadList([aFile]);
     /*
     let exifObj;
     try {
@@ -116,40 +105,78 @@ export function PhotosUpload() {
     setLongitude(longitude);
     setExifStr(JSON.stringify(exifObj));
     */
+  }  
 
-    handleFiles([aFile]);
+  function addFilesToUploadList(files) {
+    setNumUploadSuccess(0);
+    setNumUploadFail(0);
+    setFilesToUpload(filesToUpload => [...filesToUpload, ...files]);
+
   }
+
+  function previewFile(file) {
+    timeLog(`previewFile: 1.0; file:[${file}];`);
+    let reader = new FileReader();
+    reader.readAsDataURL(file);
+    reader.onloadend = function() {
+        imgRef.current.src = reader.result;
+    };
+  }
+
+
 
   function handleUploadFiles() {
-    //timeLog(`handleUploadFiles: 1.0; writeToken:[${writeToken}];`);
-    TripPhotoMapEngine.uploadPhotos(tripName, writeTokenRef.current, username, filesToUploadRef.current).then(
-      ({status, message, photoIDs}) => {
-        timeLog(`PhotosUpload.handleUploadFiles: status:[${status}]; message:[${message}];`)
-        setStatusAndMessage({status, message});
-        filesToUploadRef.current = [];
-        setNumFiles(0);
-        //timeLog(`handleUploadFiles: 2.0; msg: [${message}];`);
-      }
-    );
+    //timeLog(`handleUploadFiles: 1.0;`);
+
+    if (uploadState == Constants.PHOTO_UPLOAD_STATE.BUSY) {
+      timeLog(`handleUploadFiles: WARN - should not reach here, as checking should be done at earlier stage; System is busy uploading, please wait for it to complete;`);
+      return;
+    }
+
+    setUploadState(Constants.PHOTO_UPLOAD_STATE.BUSY);
+    let uploadPromises = TripPhotoMapEngine.uploadPhotosAsync(tripName, writeTokenRef.current, username, filesToUpload, cbUploadResult);
+
+    Promise.allSettled(uploadPromises).then(() => {
+      timeLog(`handleUploadFiles: 3.0; all uploads completed;`);
+      setUploadState(Constants.PHOTO_UPLOAD_STATE.FREE);
+      setFilesToUpload([]);
+    })
+
   }
+
+  function cbUploadResult(uploadResult) {
+    if (uploadResult == Constants.PHOTO_UPLOAD_RESULT.SUCCESS) {
+      setNumUploadSuccess(numUploadSuccess => numUploadSuccess + 1);
+    } else if (uploadResult == Constants.PHOTO_UPLOAD_RESULT.FAIL) {
+      setNumUploadFail(numUploadFail => numUploadFail + 1);
+    } else {
+      timeLog(`PhotosUpload.cbUploadResult: ERROR - unknown result: [${uploadResult}]; should not reach here;`);
+    }
+
+  }
+
+  const buttonBusyClass = uploadState == Constants.PHOTO_UPLOAD_STATE.FREE ? Constants.CLASS_BUTTON_ACTIVE : Constants.CLASS_BUTTON_INACTIVE;
 
   return (
     <>
       <div className="flex flex-col justify-evenly">
-        <label className="text-base text-navy-700 dark:text-white font-bold">Drag and Drop photos to upload</label>
-        <p>Total {numFiles} photos to be uploaded</p>
-        {messageRender()}
+        <div><label className="text-base text-navy-700 dark:text-white font-bold">Drag and Drop photos to upload</label></div>
+        <div>{uploadState == Constants.PHOTO_UPLOAD_STATE.FREE ? <StatusGreenAvailable></StatusGreenAvailable> : <StatusRedBusy></StatusRedBusy>}</div>
+        <div>Total {filesToUpload.length} photos to be uploaded</div>
+        <div>Total {numUploadSuccess} photos uploaded successfully</div>
+        <div>Total {numUploadFail} photos uploaded failed</div>
+        <div>{messageRender()}</div>
       </div>
       <div ref={dropAreaRef} className="drop-area">
         <form className="my-form">
           <p>Select or drag and drop image files into this area</p>
-          <input type="file" id="fileElem" onChange={handleUploadFile} ></input>
-          <label className="m-2 inline-block p-3 rounded-lg shadow-sm bg-indigo-500 text-white" htmlFor="fileElem">Upload an image file</label>
+          <input type="file" id="fileElem" onChange={handleAddFileToUpload} disabled={uploadState == Constants.PHOTO_UPLOAD_STATE.FREE ? false : true}></input>
+          <label className={buttonBusyClass} htmlFor="fileElem">Upload an image file</label>
         </form>
         <img ref={imgRef} id="imagePreview1"></img>
       </div>
       <div>
-        <button onClick={handleUploadFiles} className="m-2 inline-block p-3 rounded-lg shadow-sm bg-indigo-500 text-white">Upload files</button>
+        <button onClick={handleUploadFiles} className={buttonBusyClass} disabled={uploadState == Constants.PHOTO_UPLOAD_STATE.FREE ? false : true}>Upload files</button>
       </div>
       {/*
       <div>

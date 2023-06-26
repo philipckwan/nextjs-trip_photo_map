@@ -7,6 +7,10 @@ todo:
 -group close enough photos and latLng together to become a group marker
 -SEO, when pasting the view link to whatsapp, able to provide preview photos and map
 -integrate to google drive share a photo folder
+DONE(v0.7)-photo upload: Add uploading state, resolve race and concurrent issue 
+-try Upload from Google drive, file system
+-Add the photo original to local cache, once it is requested 
+-from Doris: photo bigger, map smaller, photo slider style, blogger style
 
 
 DONE:
