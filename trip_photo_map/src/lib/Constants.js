@@ -1,6 +1,6 @@
 export class Constants {
 
-  static APP_VERSION = "v0.7";
+  static APP_VERSION = "v0.9";
   static APP_UUID = "BF0879EC-1A7A-4D70-9C57-1415E5A29170";
 
   static RESULTS_OK = "OK";

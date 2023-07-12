@@ -69,6 +69,17 @@ export class TripPhotoMapEngine {
     return photosMetadata;
   }
 
+  static async getTripMetadata(accessToken) {
+    const response = await fetch(`/api/trip/access/${accessToken}/tripMetadata`, {
+      method: "get",
+      headers: {'Content-Type':'application/json'},
+    })
+    let respJson = await response.json();
+    let data = respJson.data;
+    let tripMetadata = data.tripMetadata != undefined ? data.tripMetadata : {};
+    return tripMetadata;
+  }
+
   static async getPhotoThumbnailB64(accessToken, photoId) {
     //timeLog(`TripPhotoMapEngine.getPhotoThumbnailB64: accessToken:${accessToken}; photoId:${photoId};`);
     

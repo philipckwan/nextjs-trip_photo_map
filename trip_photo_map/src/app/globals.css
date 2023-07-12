@@ -17,13 +17,12 @@
 }
 
 body {
-  color: rgb(var(--foreground-rgb));
+  color: black;
   background: linear-gradient(
-      to bottom,
-      transparent,
-      rgb(var(--background-end-rgb))
+    120deg,
+    #78C1F3,
+    #9BE8D8
     )
-    rgb(var(--background-start-rgb));
 }
 
 .drop-area {

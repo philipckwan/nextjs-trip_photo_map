@@ -10,7 +10,7 @@ import * as util from 'util'
 
 export function PhotosUpload() {
 
-  const {tripName, username, viewTokenRef, writeTokenRef, photos, setMainState} = useContext(TripInputsContext);
+  const {tripName, username, writeTokenRef, photos, setMainState} = useContext(TripInputsContext);
   const [statusAndMessage, setStatusAndMessage] = useState(Constants.STATUS_AND_MESSAGE_INITIAL);
   const dropAreaRef = useRef();
   const imgRef = useRef();
@@ -24,8 +24,6 @@ export function PhotosUpload() {
   const [exifStr, setExifStr] = useState();
 
   useEffect(() => {
-    // The DOM element is accessible here.
-    // Prevent default drag behaviors
     ["dragenter", "dragover", "dragleave", "drop"].forEach(eventName => {
       dropAreaRef.current.addEventListener(eventName, preventDefaults, false);
       document.body.addEventListener(eventName, preventDefaults, false);
@@ -65,16 +63,12 @@ export function PhotosUpload() {
     addFilesToUploadList(files);
   }
 
-  async function handleAddFileToUpload(event) {
-    //timeLog(`handleAddFileToUpload: 1.0;`);
+  async function handleAddFilesToUpload(event) {
     if (uploadState == Constants.PHOTO_UPLOAD_STATE.BUSY) {
-      timeLog(`handleAddFileToUpload: WARN - should not reach here, as checking should be done at earlier stage; System is busy uploading, please wait for it to complete;`);
+      timeLog(`handleAddFilesToUpload: WARN - should not reach here, as checking should be done at earlier stage; System is busy uploading, please wait for it to complete;`);
       return;
     }
-    let aFile = event.target.files[0];
-    //timeLog(`handleAddFileToUpload: aFile: name:[${aFile.name}]; size:[${aFile.size}]`);
-
-    addFilesToUploadList([aFile]);
+    addFilesToUploadList(event.target.files);
     /*
     let exifObj;
     try {
@@ -108,6 +102,7 @@ export function PhotosUpload() {
   }  
 
   function addFilesToUploadList(files) {
+    timeLog(`addFilesToUploadList: files.length:[${files.length}];`)
     setNumUploadSuccess(0);
     setNumUploadFail(0);
     setFilesToUpload(filesToUpload => [...filesToUpload, ...files]);
@@ -122,8 +117,6 @@ export function PhotosUpload() {
         imgRef.current.src = reader.result;
     };
   }
-
-
 
   function handleUploadFiles() {
     //timeLog(`handleUploadFiles: 1.0;`);
@@ -169,14 +162,14 @@ export function PhotosUpload() {
       </div>
       <div ref={dropAreaRef} className="drop-area">
         <form className="my-form">
-          <p>Select or drag and drop image files into this area</p>
-          <input type="file" id="fileElem" onChange={handleAddFileToUpload} disabled={uploadState == Constants.PHOTO_UPLOAD_STATE.FREE ? false : true}></input>
-          <label className={buttonBusyClass} htmlFor="fileElem">Upload an image file</label>
+          <input multiple type="file" id="fileElem" onChange={handleAddFilesToUpload} disabled={uploadState == Constants.PHOTO_UPLOAD_STATE.FREE ? false : true}></input>
+          <label className={buttonBusyClass} htmlFor="fileElem">Select one or more image files</label>
+          <p>Or, drag and drop image files into this area</p>
         </form>
         <img ref={imgRef} id="imagePreview1"></img>
       </div>
       <div>
-        <button onClick={handleUploadFiles} className={buttonBusyClass} disabled={uploadState == Constants.PHOTO_UPLOAD_STATE.FREE ? false : true}>Upload files</button>
+        <button onClick={handleUploadFiles} className={buttonBusyClass} disabled={uploadState == Constants.PHOTO_UPLOAD_STATE.FREE ? false : true}>Press here to upload the selected files</button>
       </div>
       {/*
       <div>
