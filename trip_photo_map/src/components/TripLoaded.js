@@ -70,7 +70,7 @@ export function TripLoaded() {
           <div>{username}</div>
         </div>
         <div className="flex">
-          <div><Link className="text-blue-400 no-underline hover:underline" href={(`trip-view2/${viewTokenRef.current}`)}>View Link (for sharing)</Link></div>
+          <div><Link className="text-blue-400 no-underline hover:underline" href={(`trip-view3/${viewTokenRef.current}`)}>View Link (for sharing)</Link></div>
         </div>
         <div className="flex">
           {messageRender()}

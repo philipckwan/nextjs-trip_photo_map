@@ -1,17 +1,34 @@
 todo:
 
--bug: vertical view go out of screen when vertical view is very long
- -i.e. when open image in modal, in PhotosTable and trip-view/<token>
+DONE(v0.9)-bug: vertical view go out of screen when vertical view is very long
+ DONE(v0.9)-i.e. when open image in modal, in PhotosTable and trip-view/<token>
 -improve the modal display photo
 -allow the update/override of latLng
 -group close enough photos and latLng together to become a group marker
 -SEO, when pasting the view link to whatsapp, able to provide preview photos and map
 -integrate to google drive share a photo folder
+ https://developers.google.com/drive/api/quickstart/js?authuser=0
 DONE(v0.7)-photo upload: Add uploading state, resolve race and concurrent issue 
 -try Upload from Google drive, file system
--Add the photo original to local cache, once it is requested 
--from Doris: photo bigger, map smaller, photo slider style, blogger style
+DONE(v0.9)-Add the photo original to local cache, once it is requested 
+-blogger style
+DONE(v0.9)-photo bigger, map smaller, photo slider style
+DONE(v0.9)-support multiple upload in the <input> html
+DONE(v0.9)-consider to use img src to url, instead of base64
+-issue: ROUTER_EXTERNAL_TARGET_ERROR when using mobile hotspot, both laptop and phone doesn't work
+DONE(v0.10)-http get by url, cache the photo binary
+DONE(v0.10)-lazy loading of photos in trip-view
 
+-photos dimensions
+ 600x800 (3:4)
+ 800x600 (4:3)
+ 3000x4000 (3:4)
+ 4000x3000 (4:3)
+
+ 2250x4000 (9:16)
+ 4000x2250 (16:9)
+ 1800x3200 (9:16)
+ 3200x1800 (16:9)
 
 DONE:
 DONE(v0.2)-use env variables for google map api key, server url
