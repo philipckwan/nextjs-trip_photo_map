@@ -130,3 +130,5 @@ dist
 .pnp.*
 
 trip_photo_map/package-lock.json
+
+/_old
