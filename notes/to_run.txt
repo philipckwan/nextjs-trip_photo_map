@@ -1,0 +1,11 @@
+--------------------------
+to run:
+
+$ cd trip_photo_map/
+$ npm run dev
+
+--------------------------
+first time build:
+
+$ cd trip_photo_map/
+$ npm install
