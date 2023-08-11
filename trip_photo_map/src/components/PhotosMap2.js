@@ -18,7 +18,7 @@ export function PhotosMap2({init, photos, currentPhotoIdx}) {
   const [zoom, setZoom] = useState(init.zoom ? init.zoom : DEFAULT_ZOOM);
   const [center, setCenter] = useState(init.center ? init.center: DEFAULT_CENTER);
 
-  timeLog(`PhotosMap2: 1.0;`);
+  //timeLog(`PhotosMap2: 1.0;`);
 
   return(
     <>
@@ -43,7 +43,7 @@ function PhotoMarkers2({photos, currentPhotoIdx}) {
 
 
   useEffect(() => {
-    timeLog(`PhotoMarkers2.useEffect[map, photos]: 1.0;`);//map:[${map}]; photos:[${photos}];`);
+    //timeLog(`PhotoMarkers2.useEffect[map, photos]: 1.0;`);//map:[${map}]; photos:[${photos}];`);
     if (!map || !photos || photos.length == 0) return;
 
     let initialBounds = new google.maps.LatLngBounds();
@@ -92,7 +92,7 @@ function PhotoMarkers2({photos, currentPhotoIdx}) {
   }, [map, photos]);
 
   useEffect(() => {
-    timeLog(`PhotoMarkers2.useEffect[currentPhotoIdx]: 1.0; currentPhotoIdx:[${currentPhotoIdx}];`);
+    //timeLog(`PhotoMarkers2.useEffect[currentPhotoIdx]: 1.0; currentPhotoIdx:[${currentPhotoIdx}];`);
     if (!map || !photos || !photos[currentPhotoIdx]) return;
     let lat = parseFloat(photos[currentPhotoIdx].latitude);
     if (isNaN(lat)) {

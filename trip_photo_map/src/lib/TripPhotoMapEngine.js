@@ -27,6 +27,21 @@ export class TripPhotoMapEngine {
     return uploadPromises;
   }
 
+  static async updatePhotoComment(comment, accessToken, photoID) {
+    //timeLog(`TripPhotoMapEngine.updatePhotoComment: 1.0;`);
+
+    const response = await fetch(`/api/trip/access/${accessToken}/photosMetadata/${photoID}`, {
+      method: "post",
+      headers: {'Content-Type':'application/json'},
+      body: JSON.stringify({
+        comment
+      })
+    });
+    let respJson = await response.json();
+    //timeLog(`TripPhotoMapEngine.updatePhotoComment: result2:[${JSON.stringify(respJson)}];`);
+    return respJson.status == Constants.RESULTS_OK;
+  }
+
   static async loginTrip(tripName, passphrase, username, isCreateTrip = false) {
     timeLog(`TripPhotoMapEngine.loginTrip: tripName:${tripName}; passphrase:${passphrase}; username:${username}; isCreateTrip:${isCreateTrip};`);
 

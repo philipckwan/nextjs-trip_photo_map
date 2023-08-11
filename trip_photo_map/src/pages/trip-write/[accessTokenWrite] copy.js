@@ -4,12 +4,15 @@ import {Constants} from "@/lib/Constants";
 import {useRouter} from "next/router";
 import {TripPhotoMapEngine} from "@/lib/TripPhotoMapEngine";
 import {PhotosMap2} from "@/components/PhotosMap2"
+import {CommentInput} from "@/components/CommentInput";
 import * as util from 'util'
 
 const rootMarginCenter = "-50% 0% -50% 0%";
 const rootMarginViewport = "50%";
 
-export default function TripViewDynamic3() {
+export default function TripWriteDynamic() {
+  timeLog(`TripWriteDynamic: 1.2;`);
+
   const router = useRouter();
   const [tripName, setTripName] = useState();
   const [tripStartDate, setTripStartDate] = useState();
@@ -18,12 +21,15 @@ export default function TripViewDynamic3() {
   const loadedPhotoIdxRef = useRef(-1);
   const [currentPhotoIdx, setCurrentPhotoIdx] = useState(-1);
   const numObserversRef = useRef(0);
+  //const [commentTemp, setCommentTemp] = useState("");
+  const [showCommentInputs, setShowCommentInputs] = useState([]);
+  //const [showCommentInput, setShowCommentInput] = useState(false);
 
   useEffect(() => {
-    timeLog(`TripViewDynamic3.useEffect[router];`);
+    timeLog(`TripWriteDynamic.useEffect[router];`);
     async function fetchPhotos() {
-      let accessToken = router.query.accessToken;
-      //timeLog(`TripViewDynamic3.useEffect[router].fetchPhotos: accessToken:[${accessToken}];`);
+      let accessToken = router.query.accessTokenWrite;
+      //timeLog(`TripWriteDynamic.useEffect[router].fetchPhotos: accessToken:[${accessToken}];`);
       if (accessToken == undefined) {
         return;
       }
@@ -32,7 +38,7 @@ export default function TripViewDynamic3() {
       let photos = await TripPhotoMapEngine.getPhotosMetadata(accessToken, true);  
       setTripStartDate(timestampToDate(photos[0].timestamp));
       setTripEndDate(timestampToDate(photos[photos.length - 1].timestamp));
-      //timeLog(`__photos.length:[${photos.length}];`)
+      timeLog(`__photos.length:[${photos.length}];`)
       setPhotos(photos);
       //setLoadedPhotoIdx(0);
       loadedPhotoIdxRef.current = 1;
@@ -41,6 +47,14 @@ export default function TripViewDynamic3() {
       fetchPhotos();
     }
   }, [router]);
+
+  function toggleShowCommentInput(index, photoID) {
+    //timeLog(`toggleShowCommentInput: index:[${index}]; photoID:[${photoID}];`);
+    
+    let tmpShowCommentInputs = [...showCommentInputs];
+    tmpShowCommentInputs[index] = tmpShowCommentInputs[index] == true ? false : true;
+    setShowCommentInputs(tmpShowCommentInputs);
+  }
 
   function addRefNode(node) {
     //timeLog(`addRefNode; numObserversRef:[${numObserversRef.current}];`);// node:[${node}];`);
@@ -56,7 +70,7 @@ export default function TripViewDynamic3() {
               setCurrentPhotoIdx(centerIdx);   
               if (loadedPhotoIdxRef.current < loadToIdx) {
                 //let newloadedPhotoIdxRef = i + 1;
-                timeLog(`__setting loadedPhotoIdx from [${loadedPhotoIdxRef.current}] to [${loadToIdx}];`);
+                //timeLog(`__setting loadedPhotoIdx from [${loadedPhotoIdxRef.current}] to [${loadToIdx}];`);
                 //setLoadedPhotoIdx(newLoadedPhotoIdx); 
                 loadedPhotoIdxRef.current = loadToIdx;
               }
@@ -71,7 +85,7 @@ export default function TripViewDynamic3() {
     numObserversRef.current++;
   }
 
-  //timeLog(`TripViewDynamic3: 2.0; [${new Date().getTime()}];`);
+  //timeLog(`TripWriteDynamic: 2.0; [${new Date().getTime()}];`);
   return (
     <div className="p-2 flex flex-col justify-center h-screen">
       <div className="h-1/3">
@@ -96,7 +110,7 @@ export default function TripViewDynamic3() {
               {
                 //photos[index].photoB64 != undefined ? <img className="border-2 border-lime-600" src={`data:image/jpeg;base64,${photos[index].photoB64}`} /> : photoID
                 loadedPhotoIdxRef.current >= index ? 
-                <img className="border-2 border-lime-600" src={`/api/trip/access/${router.query.accessToken}/photosBinary/${photoID}`} />
+                <img className="border-2 border-lime-600" src={`/api/trip/access/${router.query.accessTokenWrite}/photosBinary/${photoID}`} />
                 :
                 photoID                
               }
@@ -106,6 +120,17 @@ export default function TripViewDynamic3() {
             </div>
             {
               uploadedByComment && <div className="border-2 border-lime-600 flex flex-row justify-center"><p>{uploadedByComment}</p></div>
+            }
+            {
+              !uploadedByComment && 
+              <>
+              <div className="border-2 border-lime-600 flex flex-row justify-center">
+                <button onClick={() => {toggleShowCommentInput(index, photoID);}} className="m-1 p-1 rounded-md bg-indigo-500 text-white">Add Comment</button>
+              </div>
+              {
+                showCommentInputs[index] && <CommentInput index={index} photoID={photoID} accessToken={router.query.accessTokenWrite}></CommentInput>
+              }
+              </>
             }
             </>
           )}

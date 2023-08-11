@@ -1,7 +1,10 @@
 export function timeLog(msg) {
   let current = new Date();
-  let currentTime  = current.toLocaleTimeString();
-  console.log(`[${currentTime}]${msg}`);
+  //let currentTime  = current.toLocaleTimeString();
+  let currentHour = current.getHours();
+  let currentMinute = current.getMinutes();
+  let currentMilliseconds = current.getMilliseconds();
+  console.log(`[${currentHour.toString().padStart(2,"0")}:${currentMinute.toString().padStart(2,"0")}:${currentMilliseconds.toString().padStart(3,"0")}]${msg}`);
 };
 
 export function timestampToDateTime(timestamp) {

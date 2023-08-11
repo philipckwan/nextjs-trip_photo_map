@@ -1,23 +1,17 @@
 todo:
 
-DONE(v0.9)-bug: vertical view go out of screen when vertical view is very long
- DONE(v0.9)-i.e. when open image in modal, in PhotosTable and trip-view/<token>
--improve the modal display photo
+-DONE(v1.0)-support adding and viewing of comments of each photo
+-performance: [accessToken].js function addRefNode(node) keeps getting called
+-cleanup: [accessToken].js function addRefNode(node); make sure to anObserver.unobserve(node);
 -allow the update/override of latLng
 -group close enough photos and latLng together to become a group marker
 -SEO, when pasting the view link to whatsapp, able to provide preview photos and map
+
 -integrate to google drive share a photo folder
  https://developers.google.com/drive/api/quickstart/js?authuser=0
-DONE(v0.7)-photo upload: Add uploading state, resolve race and concurrent issue 
 -try Upload from Google drive, file system
-DONE(v0.9)-Add the photo original to local cache, once it is requested 
--blogger style
-DONE(v0.9)-photo bigger, map smaller, photo slider style
-DONE(v0.9)-support multiple upload in the <input> html
-DONE(v0.9)-consider to use img src to url, instead of base64
+
 -issue: ROUTER_EXTERNAL_TARGET_ERROR when using mobile hotspot, both laptop and phone doesn't work
-DONE(v0.10)-http get by url, cache the photo binary
-DONE(v0.10)-lazy loading of photos in trip-view
 
 -photos dimensions
  600x800 (3:4)
@@ -30,7 +24,19 @@ DONE(v0.10)-lazy loading of photos in trip-view
  1800x3200 (9:16)
  3200x1800 (16:9)
 
+----------------------------------------
+
 DONE:
+CANCEL-improve the modal display photo
+DONE(v0.10)-http get by url, cache the photo binary
+DONE(v0.10)-lazy loading of photos in trip-view
+DONE(v0.9)-photo bigger, map smaller, photo slider style
+DONE(v0.9)-support multiple upload in the <input> html
+DONE(v0.9)-consider to use img src to url, instead of base64
+DONE(v0.9)-Add the photo original to local cache, once it is requested 
+DONE(v0.9)-bug: vertical view go out of screen when vertical view is very long
+ DONE(v0.9)-i.e. when open image in modal, in PhotosTable and trip-view/<token>
+DONE(v0.7)-photo upload: Add uploading state, resolve race and concurrent issue 
 DONE(v0.2)-use env variables for google map api key, server url
 DONE-setup routes from photo to photo according to timestamps
 DONE-refractor server side storage

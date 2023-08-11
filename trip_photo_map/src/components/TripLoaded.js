@@ -14,7 +14,7 @@ const STATE_MAP = "STATE_MAP";
 
 export function TripLoaded() {
 
-  const {tripName, username, viewTokenRef} = useContext(TripInputsContext);
+  const {tripName, username, viewTokenRef, writeTokenRef} = useContext(TripInputsContext);
   const [stateTripLoaded, setStateTripLoaded] = useState(STATE_LIST);
   const [statusAndMessage, setStatusAndMessage] = useState(Constants.STATUS_AND_MESSAGE_INITIAL);
   const [photosAll, setPhotosAll] = useState([]);
@@ -71,6 +71,9 @@ export function TripLoaded() {
         </div>
         <div className="flex">
           <div><Link className="text-blue-400 no-underline hover:underline" href={(`trip-view3/${viewTokenRef.current}`)}>View Link (for sharing)</Link></div>
+        </div>
+        <div className="flex">
+          <div><Link className="text-blue-400 no-underline hover:underline" href={(`trip-write/${writeTokenRef.current}`)}>Write Link (for creator to add comments)</Link></div>
         </div>
         <div className="flex">
           {messageRender()}
