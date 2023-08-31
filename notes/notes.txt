@@ -6,6 +6,7 @@ todo:
 -allow the update/override of latLng
 -group close enough photos and latLng together to become a group marker
 -SEO, when pasting the view link to whatsapp, able to provide preview photos and map
+-add notifications when new photos are uploaded or comments are added
 
 -integrate to google drive share a photo folder
  https://developers.google.com/drive/api/quickstart/js?authuser=0
