@@ -2,6 +2,7 @@ import {useState, useEffect, useRef, useCallback} from "react";
 import {timeLog, timestampToDateTime} from "@/lib/PCKUtils";
 
 import {GoogleMapProvider, useGoogleMap} from "@ubilabs/google-maps-react-hooks";
+import * as wc from "which-country";
 
 const DEFAULT_ZOOM = 12;
 const DEFAULT_CENTER = {lat:32.9, lng:131.0};
@@ -99,13 +100,14 @@ function PhotoMarkers2({photos, currentPhotoIdx}) {
       return;
     }
     let lng = parseFloat(photos[currentPhotoIdx].longitude);
+    let country = wc([lng, lat]);
     map.panTo({lat, lng});
     if (openedInfoWindowRef.current) {
       openedInfoWindowRef.current.close();
       openedInfoWindowRef.current = undefined;
     }
     let aNewInfoWindow = new google.maps.InfoWindow({
-      content: `<div><p>Uploaded by ${photos[currentPhotoIdx].uploadedBy}<br/> on ${timestampToDateTime(photos[currentPhotoIdx].timestamp)}</p></div>`,
+      content: `<div><p>Uploaded by ${photos[currentPhotoIdx].uploadedBy}<br/> on ${timestampToDateTime(photos[currentPhotoIdx].timestamp)} ${(country === null) ? '': '['+country+']'}</p></div>`,
       ariaLabel: "Trip Photo",
     });
     aNewInfoWindow.open({
