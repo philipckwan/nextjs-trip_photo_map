@@ -5,7 +5,9 @@ import {Constants} from "../lib/Constants";
 export  function getServerSideProps() {
   //let props = {hi:"bye"};
   timeLog(`admin.js: getServerSideProps: 1.1;`);
-  return {props:{hi:"bye"}};
+  let env = {};
+  try { env = Object.assign({}, process.env); } catch (e) {}
+  return {props:{hi:"bye", env}};
 }
 
 export default function Admin() {
