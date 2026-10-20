@@ -129,6 +129,4 @@ dist
 .yarn/install-state.gz
 .pnp.*
 
-trip_photo_map/package-lock.json
-
 /_old
