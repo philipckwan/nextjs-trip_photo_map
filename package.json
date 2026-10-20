@@ -1,0 +1,8 @@
+{
+  "name": "nextjs-trip-photo-map",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "postinstall": "node build_dump_root.js"
+  }
+}
