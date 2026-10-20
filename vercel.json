@@ -1,6 +1,6 @@
 {
   "framework": null,
-  "buildCommand": "node build_dump_root.js",
+  "buildCommand": "node scripts/build_dump.js",
   "outputDirectory": "out",
   "installCommand": "npm install"
 }
